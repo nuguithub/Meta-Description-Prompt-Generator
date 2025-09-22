@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Description Prompt Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        #promptText {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            margin: 0;
+        }
+        .copy-btn {
+            background-color: #28a745;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meta Description Prompt Generator</h1>
+        <p>Paste the URL and keywords, select SEO or Blog, and generate a prompt for creating an SEO-optimised meta description.</p>
+        
+        <form id="generatorForm">
+            <label for="url">URL:</label>
+            <input type="url" id="url" required placeholder="e.g., https://example.com/page">
+            
+            <label for="keywords">Keywords (comma-separated):</label>
+            <input type="text" id="keywords" required placeholder="e.g., keyword1, keyword2">
+            
+            <label for="type">Choose Type:</label>
+            <select id="type" required>
+                <option value="">Select...</option>
+                <option value="SEO">SEO (Service Page)</option>
+                <option value="BLOG">BLOG (Blog Post)</option>
+            </select>
+            
+            <button type="submit">Generate Prompt</button>
+        </form>
+        
+        <div id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('generatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const url = document.getElementById('url').value.trim();
+            const keywords = document.getElementById('keywords').value.trim();
+            const type = document.getElementById('type').value;
+            
+            if (!url || !keywords || !type) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            let promptText;
+            if (type === 'BLOG') {
+                promptText = `Create a 120 to 150-character SEO-optimised meta description for this blog post: [${url}]. If it is over 150 characters with spaces, reduce it. Include a call to action. Write with an active voice in a professional tone using Australian English and avoid Oxford Commas. Strictly include only this keyword in the meta description [${keywords}]. Don't include the business name. Ensure the content does not contain any words that indicate that this was written by an AI, so it passes AI detection. Calculate how many characters are in the description when you are finished. Don't include location.`;
+            } else if (type === 'SEO') {
+                promptText = `Create a 140 to 156-character SEO-optimised meta description for this service page: [${url}]. If it is over 156 characters with spaces, reduce it. Include a call to action. Write with an active voice in a professional tone using Australian English and avoid Oxford Commas. Strictly include only this keyword in the meta description [${keywords}]. Ensure the content does not contain any words that indicate that this was written by an AI, so it passes AI detection. should include the relevant keyword, business name and location. Calculate how many characters are in the description when you are finished.`;
+            }
+            
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `
+                <p><strong>Generated Prompt:</strong></p>
+                <pre id="promptText">${promptText}</pre>
+                <button class="copy-btn" onclick="copyToClipboard()">Copy Prompt</button>
+            `;
+        });
+        
+        function copyToClipboard() {
+            const promptText = document.getElementById('promptText').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                console.clear();
+                console.log("Prompt copied to clipboard!");
+            }, function(err) {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>
